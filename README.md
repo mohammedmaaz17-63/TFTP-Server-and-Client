@@ -1,6 +1,3 @@
-Absolutely. Here is the **entire TFTP README in one single block**, so you can copy-paste it directly into your `README.md` file:
-
-````markdown
 # TFTP Client and Server
 
 ## Project Overview
@@ -58,7 +55,6 @@ Client                         Server
   |                              |
   |          ACK                 |
   |----------------------------->|
-````
 
 ### File Upload
 
