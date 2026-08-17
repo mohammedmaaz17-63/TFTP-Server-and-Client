@@ -1,0 +1,345 @@
+Documentation :
+
+
+Name       : Mohammed Maaz
+Roll No.   : 25031_114
+
+
+Title :
+
+                                             T F T P   P R O J E C T  [LINUX INTERNALS]
+
+
+
+1. INTRODUCTION :
+
+--> Trivial File Transfer Protocol (TFTP) is a simple file transfer protocol used to transfer files between a client and server over a network. It operates on UDP (User Datagram Protocol) and uses port 69 by default.
+
+--> Unlike FTP, TFTP does not provide authentication or directory listing features. It is mainly used in embedded systems, routers, and network booting environments.
+
+--> In this project, we implement a TFTP Client and Server in C using Linux system calls and socket programming.
+
+
+
+
+2. OBJECTIVES :
+
+The main objectives of this project are:
+
+-->> To understand UDP socket programming in Linux
+
+-->> To implement file transfer using TFTP protocol
+
+-->> To understand network byte ordering
+
+-->> To implement client-server communication
+
+-->> To use Linux system calls like socket(), bind(), sendto(), recvfrom()
+
+
+
+
+3. TOOLS AND TECHNOLOGIES :
+                            Tool	                              Purpose
+
+                            C Programming	                      Implementation
+                            Linux OS	                          Development Environment
+                            GCC Compiler	                      Compilation
+                            Socket Programming	                  Network Communication
+                            UDP Protocol	                      Data Transfer
+
+
+
+
+4. ARCHITECTURE :
+
+        +-------------+
+        |   Client    |
+        +-------------+
+               |
+               |  RRQ / WRQ
+               |
+               v
+        +-------------+
+        |   Server    |
+        +-------------+
+               |
+               | DATA / ACK
+               |
+               v
+        File Transfer
+
+The communication occurs using UDP datagrams.
+
+
+
+
+5. TFTP PACKET STRUCTURE :
+
+Each TFTP packet contains:
+
+                                Field	                        Size
+
+                                Opcode	                        2 Bytes
+                                Block Number	                2 Bytes
+                                Data	                        512 Bytes
+
+                                Maximum packet size:
+
+                                2 bytes opcode
+                                2 bytes block number
+                                512 bytes data
+                                -----------------
+                                516 bytes
+
+
+
+
+6. TFTP OPERATIONS ::
+ 
+1. Read Request (RRQ)
+
+-->> Client requests file from server.
+
+-->> Client → RRQ → Server
+-->> Server → DATA → Client
+-->> Client → ACK → Server
+
+2. Write Request (WRQ)
+
+-->> Client sends file to server.
+
+-->> Client → WRQ → Server
+-->> Server → ACK → Client
+-->> Client → DATA → Server
+-->> Server → ACK → Client
+
+
+
+
+7. Project File Structure
+
+Example directory structure:
+
+TFTP/
+│
+├── client.c
+├── server.c
+├── tftp.h
+├── client.h
+
+Description
+                                File	                       Purpose
+
+                                client.c	                   Implements TFTP client
+                                server.c	                   Implements TFTP server
+                                file_transfer.c            	   Contains send_file() and receive_file()
+                                tftp.h	                       Packet structure and constants
+                                client.h	                   Client function declarations
+
+
+
+
+
+8. SYSTEM CALLS :
+
+-->> Creates communication endpoint.
+
+        socket(AF_INET, SOCK_DGRAM, 0);
+        bind()
+
+-->> Binds socket to port.
+
+        bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+        sendto()
+
+-->> Sends UDP packet.
+
+        sendto(sockfd, buffer, size, 0, addr, addrlen);
+        recvfrom()
+
+-->> Receives UDP packet.
+
+        recvfrom(sockfd, buffer, size, 0, addr, addrlen);
+        open()
+
+-->> Opens file.
+
+        open(filename, O_RDONLY);
+        read()
+
+-->> Reads file data.
+
+        read(fd, buffer, size);
+        write()
+
+-->> Writes data to file.
+
+        write(fd, buffer, size);
+
+
+
+
+
+9. ALGORITHM :
+
+--> Server Algorithm
+
+--> Create UDP socket
+
+--> Bind socket to port
+
+--> Wait for client request
+
+--> Receive RRQ or WRQ packet
+
+--> If RRQ → send file
+
+--> If WRQ → receive file
+
+--> Send ACK packets
+
+--> Repeat until transfer completes
+
+--> Client Algorithm
+
+--> Start client
+
+--> Connect to server
+
+--> Enter command
+
+--> If GET → send RRQ
+
+--> If PUT → send WRQ
+
+--> Transfer file using DATA and ACK packets
+
+--> Stop when file transfer completes
+
+
+
+
+
+10. COMPILATION :
+
+Compile server:
+
+            gcc server.c file_transfer.c -o server
+
+Compile client:
+
+            gcc client.c file_transfer.c -o client
+
+
+
+
+
+11. EXECUTION :
+
+Step 1: Run Server
+
+        ./server
+
+Output:
+
+        TFTP Server listening on port 6969...
+
+Step 2: Run Client
+ 
+        ./client
+
+Prompt:
+
+        tftp>
+
+Step 3: Connect to Server
+
+        connect 127.0.0.1 6969
+
+Step 4: Download File
+
+        get test.txt
+
+Step 5: Upload File
+
+        put sample.txt
+
+Step 6: Exit
+
+        quit
+
+
+
+
+
+12. SAMPLE OUTPUT :
+
+Server:
+
+        TFTP Server listening on port 6969...
+        Client requested GET test.txt
+        File sent successfully
+
+Client:
+
+        tftp> connect 127.0.0.1 6969
+        Connected to server
+
+        tftp> get test.txt
+        File transfer completed
+
+
+
+
+
+13. ADVANTAGES :
+
+        -->> Simple protocol
+
+        -->> Easy to implement
+
+        -->> Small memory requirement
+
+        -->> Used in embedded devices
+
+
+
+
+
+
+14. LIMITATIONS :
+
+        --> No authentication
+
+        --> No encryption
+
+        --> No directory listing
+
+        --> Uses UDP (less reliable)
+
+
+
+
+
+15. APPLICATIONS :
+
+        Network booting
+
+        Router firmware updates
+
+        Embedded systems
+
+        Diskless workstation booting
+
+
+
+
+
+
+16. CONCLUSION :
+
+-->> This project demonstrates the implementation of TFTP protocol using UDP socket programming in Linux. 
+-->> It helps understand network communication, file handling, and protocol implementation.
+-->> The project successfully supports both file upload (PUT) and file download (GET) operations.
+
